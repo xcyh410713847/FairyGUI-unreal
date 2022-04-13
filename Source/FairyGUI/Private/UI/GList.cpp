@@ -1069,7 +1069,7 @@ FVector2D UGList::GetSnappingPosition(const FVector2D& InPoint)
 {
     if (bVirtual)
     {
-        FVector2D ret = InPoint;
+        FVector2f ret = (FVector2f)InPoint;
         if (Layout == EListLayoutType::SingleColumn || Layout == EListLayoutType::FlowHorizontal)
         {
             int32 index = GetIndexOnPos1(ret.Y, false);
@@ -1089,7 +1089,7 @@ FVector2D UGList::GetSnappingPosition(const FVector2D& InPoint)
                 ret.X += VirtualItems[index].Size.X + ColumnGap;
         }
 
-        return ret;
+        return (FVector2D)ret;
     }
     else
         return UGComponent::GetSnappingPosition(InPoint);
