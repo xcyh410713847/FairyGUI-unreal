@@ -79,7 +79,7 @@ FVector2D FBitmapFontRun::GetLocationAt(const TSharedRef< ILayoutBlock >& Block,
     return Block->GetLocationOffset();
 }
 
-int32 FBitmapFontRun::OnPaint(const FPaintArgs& Args, const FTextLayout::FLineView& Line, const TSharedRef< ILayoutBlock >& Block, const FTextBlockStyle& DefaultStyle, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
+int32 FBitmapFontRun::OnPaint(const FPaintArgs& PaintArgs, const FTextArgs& TextArgs, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
 {
     if (Glyph == nullptr)
         return LayerId;
@@ -88,15 +88,24 @@ int32 FBitmapFontRun::OnPaint(const FPaintArgs& Args, const FTextLayout::FLineVi
     const float InverseScale = Inverse(AllottedGeometry.Scale);
 
     FLinearColor FinalColorAndOpacity;
+    /* 修复参数 DefaultStyle 没有了
     if (Font->bCanTint)
         FinalColorAndOpacity = InWidgetStyle.GetColorAndOpacityTint() * DefaultStyle.ColorAndOpacity.GetSpecifiedColor();
     else
         FinalColorAndOpacity = InWidgetStyle.GetColorAndOpacityTint();
+    */
+
+    // 替换上面注释中的代码
+    FinalColorAndOpacity = InWidgetStyle.GetColorAndOpacityTint();
+	
     const ESlateDrawEffect DrawEffects = bParentEnabled ? ESlateDrawEffect::None : ESlateDrawEffect::DisabledEffect;
     FSlateDrawElement::MakeBox(
         OutDrawElements,
         ++LayerId,
-        AllottedGeometry.ToPaintGeometry(Glyph->Size, FSlateLayoutTransform(TransformPoint(InverseScale, Block->GetLocationOffset()) + Glyph->Offset)),
+        // 修复参数 Block 没有了
+        //AllottedGeometry.ToPaintGeometry(Glyph->Size, FSlateLayoutTransform(TransformPoint(InverseScale, Block->GetLocationOffset()) + Glyph->Offset)),
+		// 替换上面注释的代码
+        AllottedGeometry.ToPaintGeometry(Glyph->Size, FSlateLayoutTransform(TransformPoint(InverseScale, FVector2D(ForceInit)) + Glyph->Offset)),
         &Brush,
         DrawEffects,
         FinalColorAndOpacity
