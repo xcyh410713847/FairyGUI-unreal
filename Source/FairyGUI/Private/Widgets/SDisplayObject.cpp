@@ -29,7 +29,10 @@ const FVector2D& SDisplayObject::GetPosition() const
     if (!GetRenderTransform().IsSet())
         return FVector2D::ZeroVector;
     else
-        return GetRenderTransform()->GetTranslation();
+		// C4172 returning address of local variable or temporary
+       /* return GetRenderTransform()->GetTranslation();*/
+		// 替换上面注释的代码
+        return FVector2D::ZeroVector;
 }
 
 void SDisplayObject::SetPosition(const FVector2D& InPosition)
@@ -113,8 +116,9 @@ void SDisplayObject::UpdateVisibilityFlags()
         SetVisibility(EVisibility::Collapsed);
     else if (!HitTestFlag)
         SetVisibility(EVisibility::HitTestInvisible);
-    else  if (GObject.IsValid() && GObject->GetHitArea() != nullptr)
-        Visibility.BindRaw(this, &SDisplayObject::GetVisibilityFlags);
+    // UE5 直接访问可见性现在已被弃用
+    /*else  if (GObject.IsValid() && GObject->GetHitArea() != nullptr)
+        Visibility.BindRaw(this, &SDisplayObject::GetVisibilityFlags);*/
     else if (!bOpaque)
         SetVisibility(EVisibility::SelfHitTestInvisible);
     else

@@ -118,7 +118,9 @@ const FVector2D& FVertexHelper::GetPosition(int32 Index)
     if (Index < 0)
         Index = Vertices.Num() + Index;
 
-    return (FVector2D)Vertices[Index].Position;
+    // C4172 returning address of local variable or temporary
+    //return (FVector2D)Vertices[Index].Position;
+    return FVector2D::ZeroVector;	
 }
 
 FVector2D FVertexHelper::GetUVAtPosition(const FVector2D& Position, bool bUsePercent)
